@@ -10,4 +10,8 @@ A real estate web platform built for the city of Indore, enabling property disco
 - **Hosting:** Vercel (Frontend), Railway/EC2 (Backend)
 
 ## Folder Structure
-
+nestedge/
+│
+├── backend/ # NestJS backend
+├── frontend/ # React/Next.js frontend
+└── README.md

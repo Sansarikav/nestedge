@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String     @id @default(uuid())
+  firstName         String
+  lastName          String
+  email             String     @unique
+  phone             String
+  password          String
+  role              Role
+  properties        Property[] @relation("OwnerProperties")
+  hasPaid           Boolean    @default(false)
+  isSubscribed      Boolean    @default(false)
+  isFeatured        Boolean    @default(false)
+  subscriptionStart DateTime?
+  subscriptionEnd   DateTime?
+  brokerProfile     BrokerProfile?
+  favorites         Favorite[]
+  inquiries         Inquiry[]
+  profileViews      Int        @default(0)     // For broker analytics
+  rating            Float?                     // Optional broker rating
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+}
+
+model Property {
+  id             Int        @id @default(autoincrement())
+  title          String
+  description    String?
+  price          Float
+  bedrooms       Int?
+  bathrooms      Int?
+  area           Float?
+  type           String?
+  furnishing     String?
+  location       String
+  image          String?
+  listingType    String?
+  ownerId        String
+  owner          User       @relation("OwnerProperties", fields: [ownerId], references: [id])
+  favorites      Favorite[]
+  inquiries      Inquiry[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  propertyId Int
+  user       User     @relation(fields: [userId], references: [id])
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model Inquiry {
+  id         Int      @id @default(autoincrement())
+  userId     String
+  propertyId Int
+  message    String?
+  user       User     @relation(fields: [userId], references: [id])
+  property   Property @relation(fields: [propertyId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+model BrokerProfile {
+  id             Int      @id @default(autoincrement())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  specialization String
+  location       String
+  phone          String
+  email          String
+  experience     String
+  description    String
+  createdAt      DateTime @default(now())
+}
+
+enum Role {
+  BUYER
+  BROKER
+  OWNER
+}

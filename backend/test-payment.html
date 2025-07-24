@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Razorpay Test</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </head>
+  <body>
+    <button id="rzp-button">Pay ₹199</button>
+
+    <script>
+      const options = {
+        key: "rzp_test_RJ8vXvWCYNy2hM", // test key ID
+        amount: 19900, // ₹199 in paise
+        currency: "INR",
+        name: "NestEdge",
+        description: "Broker/Buyer Subscription",
+        order_id: "order_QwZR88hqVigTdh", // Razorpay order ID from your backend `/pay` endpoint
+
+        handler: function (response) {
+          console.log("Razorpay Payment ID:", response.razorpay_payment_id);
+          console.log("Razorpay Order ID:", response.razorpay_order_id);
+          console.log("Razorpay Signature:", response.razorpay_signature);
+
+          alert("Copy these 3 values and test in Thunder Client!");
+        },
+
+        prefill: {
+          name: "Sansarika Vaishnav",
+          email: "youremail@example.com",
+          contact: "9999999999"
+        },
+        theme: {
+          color: "#F37254"
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      document.getElementById('rzp-button').onclick = function (e) {
+        rzp.open();
+        e.preventDefault();
+      };
+    </script>
+  </body>
+</html>

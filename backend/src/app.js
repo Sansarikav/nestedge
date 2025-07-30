@@ -1,12 +1,12 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const cors = require("cors"); // ✅ Add this line
+const cors = require("cors"); // Add this line
 const userRoutes = require("./routes/user.routes");
 
 dotenv.config();
 const app = express();
 
-// ✅ Enable CORS for all origins
+// Enable CORS for all origins
 app.use(cors());
 
 app.use(express.json());

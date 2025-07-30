@@ -43,6 +43,7 @@ model Property {
   location       String
   image          String?
   listingType    String?
+  featured       Boolean   @default(false)
   ownerId        String
   owner          User       @relation("OwnerProperties", fields: [ownerId], references: [id])
   favorites      Favorite[]

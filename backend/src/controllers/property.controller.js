@@ -3,11 +3,13 @@ const propertyService = require('../services/property.service');
 // CREATE
 exports.createProperty = async (req, res) => {
   try {
-    const result = await propertyService.createProperty(req.user.id, req.body);
+    console.log("🔧 Incoming Property Data:", req.body);
+    const userId = req.user.id; // Or however you're getting userId from JWT
+    const result = await propertyService.createProperty(userId, req.body);
     res.status(201).json(result);
   } catch (err) {
-    console.error("Create Error:", err);
-    res.status(500).json({ message: "Something went wrong" });
+    console.error("❌ Create Property Error:", err);
+    res.status(500).json({ message: "Something went wrong", error: err.message });
   }
 };
 

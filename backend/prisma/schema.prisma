@@ -45,6 +45,7 @@ model Property {
   listingType    String?
   featured       Boolean   @default(false)
   ownerId        String
+  views          Int        @default(0)
   owner          User       @relation("OwnerProperties", fields: [ownerId], references: [id])
   favorites      Favorite[]
   inquiries      Inquiry[]

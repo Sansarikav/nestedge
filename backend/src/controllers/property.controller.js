@@ -1,4 +1,6 @@
 const propertyService = require('../services/property.service');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // CREATE
 exports.createProperty = async (req, res) => {
@@ -74,5 +76,24 @@ exports.searchProperties = async (req, res) => {
     res.status(200).json(results);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+exports.incrementView = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await prisma.property.update({
+      where: { id: parseInt(id) },
+      data: {
+        views: {
+          increment: 1
+        }
+      }
+    });
+
+    res.status(200).json({ message: "View recorded" });
+  } catch (err) {
+    console.error("View increment error:", err); // ✅ Add this
+    res.status(500).json({ error: "Failed to increment view count" });
   }
 };

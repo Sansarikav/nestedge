@@ -8,11 +8,13 @@ const {
   getPropertyById,
   updateProperty,
   deleteProperty,
-  searchProperties
+  searchProperties,
+  incrementView
 } = require('../controllers/property.controller');
 const { protect } = require('../middlewares/auth.middleware');
 
 router.get('/my', protect, getMyProperties); // GET /api/properties/my
+router.put('/:id/view', incrementView);
 
 // Public Routes
 router.get('/', getAllProperties); // GET /api/properties

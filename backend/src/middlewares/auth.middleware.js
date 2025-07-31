@@ -25,7 +25,8 @@ exports.protect = async (req, res, next) => {
 
 exports.authorize = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    const normalizedRoles = roles.map(role => role.toUpperCase());
+    if (!normalizedRoles.includes(req.user.role)) {
       return res.status(403).json({ error: 'Access denied' });
     }
     next();

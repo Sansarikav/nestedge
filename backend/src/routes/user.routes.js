@@ -8,7 +8,7 @@ router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 
 // Payments
-router.post('/pay', protect, authorize('BROKER', 'OWNER'), userController.pay);
+router.post('/pay', protect, authorize('BROKER', 'OWNER', 'BUYER'), userController.pay);
 router.post('/verify-payment', protect, userController.verifyPayment); // No need to authorize by role here
 
 // Favorites

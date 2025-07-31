@@ -55,13 +55,22 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
+
+    if (!email || !password || !role) {
+      return res.status(400).json({ error: 'Email, password, and role are required' });
+    }
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) throw new Error('Invalid email or password');
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new Error('Invalid email or password');
+
+    //Check if role matches
+    if (user.role.toLowerCase() !== role.toLowerCase()) {
+      return res.status(403).json({ error: `This account is registered as a ${user.role}. Please log in as a ${user.role}.` });
+    }
 
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '7d'

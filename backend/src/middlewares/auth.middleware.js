@@ -11,7 +11,12 @@ exports.protect = async (req, res, next) => {
     const user = await prisma.user.findUnique({ where: { id: decoded.id } });
     if (!user) throw new Error('User not found');
 
-    req.user = user;
+    // Force role to uppercase for consistent authorization
+    req.user = {
+      ...user,
+      role: user.role?.toUpperCase(), // normalize role
+    };
+
     next();
   } catch (err) {
     res.status(401).json({ error: 'Unauthorized: ' + err.message });

@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { createInquiry, getMyInquiries } = require('../controllers/inquiry.controller');
+const { createInquiry, getMyInquiries, getInquiriesForOwner } = require('../controllers/inquiry.controller');
 const { protect } = require('../middlewares/auth.middleware');
 
 router.post('/', protect, createInquiry);       // POST /api/inquiries
 router.get('/my', protect, getMyInquiries);     // GET /api/inquiries/my
+
+router.get('/owner', protect, getInquiriesForOwner);
 
 module.exports = router;

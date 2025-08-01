@@ -42,3 +42,56 @@ exports.getMyInquiries = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch inquiries' });
   }
 };
+
+exports.getInquiriesForOwner = async (req, res) => {
+  try {
+    // Step 1: Get all property IDs owned by this user
+    const ownerProperties = await prisma.property.findMany({
+      where: { ownerId: req.user.id },
+      select: { id: true }
+    });
+
+    const propertyIds = ownerProperties.map(p => p.id);
+
+    // If no properties owned, return empty array
+    if (propertyIds.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    // Step 2: Get inquiries for those properties
+    const inquiries = await prisma.inquiry.findMany({
+      where: {
+        propertyId: { in: propertyIds }
+      },
+      include: {
+        property: {
+          select: { title: true }
+        },
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    // Step 3: Format response
+    const formattedInquiries = inquiries.map(inquiry => ({
+      id: inquiry.id,
+      propertyTitle: inquiry.property.title,
+      buyerName: `${inquiry.user.firstName} ${inquiry.user.lastName}`,
+      buyerEmail: inquiry.user.email,
+      message: inquiry.message,
+      createdAt: inquiry.createdAt
+    }));
+
+    // Step 4: Return
+    res.status(200).json(formattedInquiries);
+  } catch (err) {
+    console.error('❌ Failed to fetch owner inquiries:', err);
+    res.status(500).json({ error: 'Failed to fetch inquiries' });
+  }
+};

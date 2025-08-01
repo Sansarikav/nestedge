@@ -167,8 +167,18 @@ exports.searchProperties = async (filters) => {
         lte: parseFloat(priceMax)
       }
     }),
-    ...(type && { type }), // e.g., "Flat", "Villa", etc.
-    ...(listingType && { listingType }), // "Sale" or "Rent"
+    ...(type && {
+      type: {
+        equals: type,
+        mode: 'insensitive'
+      }
+    }),
+    ...(listingType && {
+      listingType: {
+        equals: listingType,
+        mode: 'insensitive'
+      }
+    }),
     ...(bedrooms && { bedrooms: parseInt(bedrooms) }),
     ...(bathrooms && { bathrooms: parseInt(bathrooms) }),
   };

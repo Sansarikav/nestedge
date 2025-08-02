@@ -36,26 +36,28 @@ exports.createBrokerProfile = async (userId, profileData) => {
 exports.getAllSubscribedBrokers = async () => {
   return await prisma.brokerProfile.findMany({
     where: {
-      createdBy: {
+      user: {
         isSubscribed: true,
         role: 'BROKER',
-        subscriptionEnd: { gte: new Date() }
-      }
+        subscriptionEnd: { gte: new Date() },
+      },
     },
-    orderBy: {
-      createdBy: {
-        isFeatured: 'desc'
-      }
-    },
+    orderBy: [
+      {
+        user: {
+          isFeatured: 'desc', // featured brokers on top
+        },
+      },
+    ],
     include: {
-      createdBy: {
+      user: {
         select: {
           firstName: true,
           lastName: true,
-          isFeatured: true
-        }
-      }
-    }
+          isFeatured: true,
+        },
+      },
+    },
   });
 };
 

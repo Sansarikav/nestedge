@@ -136,3 +136,20 @@ exports.getOwnerDashboard = async (userId) => {
     inquiries
   };
 };
+
+exports.updateUserProfile = async (userId, { username = "", email, phone }) => {
+  const [firstName = "", ...rest] = username.trim().split(" ");
+  const lastName = rest.join(" ");
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      firstName,
+      lastName,
+      email,
+      phone,
+    },
+  });
+
+  return updatedUser;
+};

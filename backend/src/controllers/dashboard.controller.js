@@ -26,3 +26,17 @@ exports.getOwnerDashboard = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { username, email, phone } = req.body;
+
+    const updatedUser = await dashboardService.updateUserProfile(userId, { username, email, phone });
+
+    res.status(200).json({ message: "Profile updated", user: updatedUser });
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};

@@ -36,23 +36,23 @@ exports.createBrokerProfile = async (userId, profileData) => {
 exports.getAllSubscribedBrokers = async () => {
   return await prisma.brokerProfile.findMany({
     where: {
-      user: {
+      createdBy: {
         isSubscribed: true,
         role: 'BROKER',
         subscriptionEnd: { gte: new Date() }
       }
     },
     orderBy: {
-      user: {
-        isFeatured: 'desc' // Featured brokers at top
+      createdBy: {
+        isFeatured: 'desc'
       }
     },
     include: {
-      user: {
+      createdBy: {
         select: {
           firstName: true,
           lastName: true,
-          isFeatured: true, // So frontend can show the badge
+          isFeatured: true
         }
       }
     }

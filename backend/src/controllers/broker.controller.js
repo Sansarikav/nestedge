@@ -103,3 +103,19 @@ exports.verifyFeaturedPayment = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getBrokerById = async (req, res) => {
+  try {
+    const brokerId = req.params.id;
+    const broker = await brokerService.getBrokerById(brokerId);
+
+    if (!broker) {
+      return res.status(404).json({ message: 'Broker not found' });
+    }
+
+    return res.status(200).json(broker);
+  } catch (error) {
+    console.error('Error fetching broker by ID:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};

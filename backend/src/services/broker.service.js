@@ -79,3 +79,21 @@ exports.updateBrokerProfile = async (userId, updates) => {
 exports.deleteBrokerProfile = async (userId) => {
   await prisma.brokerProfile.delete({ where: { userId } });
 };
+
+exports.getBrokerById = async (brokerId) => {
+  return await prisma.brokerProfile.findUnique({
+    where: {
+      id: parseInt(brokerId), // convert string to integer
+    },
+    include: {
+      user: {
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          phone: true
+        }
+      }
+    }
+  });
+};

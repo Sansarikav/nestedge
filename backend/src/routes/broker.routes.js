@@ -16,5 +16,6 @@ router.post('/verify-featured', protect, authorize('BROKER'), brokerController.v
 
 // Public route
 router.get('/list', brokerController.getBrokers);
+router.get('/:id', brokerController.getBrokerById); 
 
 module.exports = router;

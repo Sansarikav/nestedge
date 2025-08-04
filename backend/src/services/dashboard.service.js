@@ -51,7 +51,18 @@ exports.getBrokerDashboard = async (userId) => {
   });
 
   const profile = await prisma.brokerProfile.findUnique({
-    where: { userId }
+    where: { userId: req.user.id },
+    include: {
+      user: {
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          phone: true,
+          rating: true,
+        },
+      },
+    },
   });
 
   // Fetch all properties listed by the broker

@@ -9,8 +9,8 @@ router.use(protect);
 // Broker-only routes
 router.post('/create-profile', isSubscribed, authorize('BROKER'), brokerController.createProfile);
 router.get('/my-profile', authorize('BROKER'), brokerController.getMyProfile);
-router.put('/update-profile', authorize('BROKER'), brokerController.updateProfile); // Optional
-router.delete('/delete-profile', authorize('BROKER'), brokerController.deleteProfile); // Optional
+router.put('/update-profile', authorize('BROKER'), brokerController.updateProfile); 
+router.delete('/delete-profile', authorize('BROKER'), brokerController.deleteProfile); 
 router.post('/feature-order', protect, authorize('BROKER'), brokerController.createFeaturedOrder);
 router.post('/verify-featured', protect, authorize('BROKER'), brokerController.verifyFeaturedPayment);
 

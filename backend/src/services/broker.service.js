@@ -28,8 +28,18 @@ exports.createBrokerProfile = async (userId, profileData) => {
       experience: profileData.experience,
       description: profileData.description,
     },
+    include: {
+      user: {
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          phone: true,
+          rating: true,
+        },
+      },
+    },
   });
-
   return broker;
 };
 
@@ -62,16 +72,39 @@ exports.getAllSubscribedBrokers = async () => {
 };
 
 exports.getMyBrokerProfile = async (userId) => {
-  const profile = await prisma.brokerProfile.findUnique({ where: { userId } });
+  const profile = await prisma.brokerProfile.findUnique({
+    where: { userId },
+    include: {
+      user: {
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          phone: true,
+          rating: true
+        },
+      },
+    },
+  });
   if (!profile) throw new Error('Broker profile not found');
   return profile;
 };
 
-// Optional update/delete if needed
 exports.updateBrokerProfile = async (userId, updates) => {
   const profile = await prisma.brokerProfile.update({
     where: { userId },
     data: updates,
+    include: {
+      user: {
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
+          phone: true,
+          rating: true,
+        },
+      },
+    },
   });
   return profile;
 };

@@ -61,11 +61,31 @@ const razorpayInstance = new Razorpay({
 
 exports.createFeaturedOrder = async (req, res) => {
   try {
+    // Get the current user
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    let amount = 49900; // Default ₹499
+
+    // If user is already a subscribed broker, apply discounted upgrade
+    const broker = await prisma.brokerProfile.findUnique({
+      where: { userId: req.user.id },
+    });
+
+    if (broker) {
+      amount = 14900; // ₹149 for upgrade
+    }
+
     const options = {
-      amount: 49900, // ₹499 in paise
+      amount,
       currency: 'INR',
       receipt: `featured_${Date.now()}`,
-      payment_capture: 1
+      payment_capture: 1,
     };
 
     const order = await razorpayInstance.orders.create(options);
@@ -74,6 +94,7 @@ exports.createFeaturedOrder = async (req, res) => {
     res.status(500).json({ error: 'Failed to create order' });
   }
 };
+
 
 exports.verifyFeaturedPayment = async (req, res) => {
   try {

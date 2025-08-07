@@ -81,7 +81,8 @@ exports.getMyBrokerProfile = async (userId) => {
           lastName: true,
           email: true,
           phone: true,
-          rating: true
+          rating: true,
+          isFeatured: true
         },
       },
     },
